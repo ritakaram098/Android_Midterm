@@ -3,7 +3,6 @@ package com.example.petcare.ui
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -50,13 +49,12 @@ fun PetListScreen(
     val scope = rememberCoroutineScope()
     var showAboutDialog by remember { mutableStateOf(false) }
 
-    // Delete confirmation dialog state
     var petToDelete by remember { mutableStateOf<Pet?>(null) }
 
     if (petToDelete != null) {
         AlertDialog(
             onDismissRequest = { petToDelete = null },
-            title = { Text("Delete Pet?", color = MaterialTheme.colorScheme.primary) },
+            title = { Text("Delete Pet?", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold) },
             text = { Text("Are you sure you want to delete ${petToDelete?.name}? This action cannot be undone.") },
             confirmButton = {
                 TextButton(
@@ -66,7 +64,7 @@ fun PetListScreen(
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Delete")
+                    Text("Delete", fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -74,7 +72,7 @@ fun PetListScreen(
                     Text("Cancel", color = MaterialTheme.colorScheme.secondary)
                 }
             },
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(20.dp),
             containerColor = MaterialTheme.colorScheme.surface
         )
     }
@@ -82,14 +80,14 @@ fun PetListScreen(
     if (showAboutDialog) {
         AlertDialog(
             onDismissRequest = { showAboutDialog = false },
-            title = { Text("About Pet Care", color = MaterialTheme.colorScheme.primary) },
-            text = { Text("Pet Care Task Tracker App\nMidterm Project\nManage your pets and care tasks easily.", color = MaterialTheme.colorScheme.onSurface) },
+            title = { Text("About Pet Care", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold) },
+            text = { Text("Pet Care Routine & Reminder Log\nA professional companion app for happy and healthy pets.", color = MaterialTheme.colorScheme.onSurface) },
             confirmButton = {
                 TextButton(onClick = { showAboutDialog = false }) {
-                    Text("OK", color = MaterialTheme.colorScheme.primary)
+                    Text("OK", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             },
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(20.dp),
             containerColor = MaterialTheme.colorScheme.surface
         )
     }
@@ -98,30 +96,47 @@ fun PetListScreen(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = MaterialTheme.colorScheme.background
+                drawerContainerColor = MaterialTheme.colorScheme.background,
+                drawerShape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
             ) {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(28.dp))
                 Row(
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Pets,
-                        contentDescription = "App Logo",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Text(
-                        text = "Pet Care Menu",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Pets,
+                            contentDescription = "App Logo",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(26.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "Pet Care",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "Pet Profiles",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                 }
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp))
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Default.Pets, contentDescription = "My Pets") },
-                    label = { Text("My Pets") },
+                    label = { Text("My Pets", fontWeight = FontWeight.Bold) },
                     selected = true,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -131,7 +146,7 @@ fun PetListScreen(
                 )
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Default.Add, contentDescription = "Add Pet") },
-                    label = { Text("Add New Pet") },
+                    label = { Text("Add New Pet", fontWeight = FontWeight.Medium) },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -142,7 +157,7 @@ fun PetListScreen(
                 )
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Default.Info, contentDescription = "About") },
-                    label = { Text("About") },
+                    label = { Text("About App", fontWeight = FontWeight.Medium) },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -189,6 +204,21 @@ fun PetListScreen(
                     )
                 )
             },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = onAddPetClick,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Pet",
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+            },
             containerColor = MaterialTheme.colorScheme.background
         ) { paddingValues ->
             Column(
@@ -224,14 +254,14 @@ fun PetListScreen(
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Your little friends, all in one place.",
+                            text = "Your little companions, all in one place.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.secondary
                         )
                     }
                 }
 
-                // Subtitle / Companions header ("Your companions")
+                // Subtitle / Companions header
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -243,11 +273,18 @@ fun PetListScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
-                    Text(
-                        text = "${pets.size} pets",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant
+                    ) {
+                        Text(
+                            text = "${pets.size} pets",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        )
+                    }
                 }
 
                 if (pets.isEmpty()) {
@@ -257,53 +294,60 @@ fun PetListScreen(
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "No pets added yet.\nTap '+ Add a Pet' below to get started!",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.secondary,
-                            textAlign = TextAlign.Center
-                        )
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(32.dp)
+                                    .fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(64.dp)
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Pets,
+                                        contentDescription = "Empty",
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(32.dp)
+                                    )
+                                }
+                                Text(
+                                    text = "No pets added yet",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Text(
+                                    text = "Tap the '+' button below to add your first furry companion!",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
                     }
                 } else {
                     LazyColumn(
                         modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
                         items(pets) { pet ->
                             PetItemCard(
                                 pet = pet,
-                                onClick = { onPetClick(pet.id) },
                                 onDelete = { petToDelete = pet }
                             )
                         }
                     }
-                }
-
-                // Prominent Bottom Button ("+ Add a Pet")
-                Button(
-                    onClick = onAddPetClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(bottom = 16.dp),
-                    shape = RoundedCornerShape(28.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Pet Icon",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Add a Pet",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
                 }
             }
         }
@@ -311,7 +355,7 @@ fun PetListScreen(
 }
 
 @Composable
-fun PetItemCard(pet: Pet, onClick: () -> Unit, onDelete: () -> Unit) {
+fun PetItemCard(pet: Pet, onDelete: () -> Unit) {
     val context = LocalContext.current
     val drawableResId = remember(pet.type) { getPetDrawableId(context, pet.type) }
 
@@ -333,10 +377,8 @@ fun PetItemCard(pet: Pet, onClick: () -> Unit, onDelete: () -> Unit) {
     }
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -394,16 +436,9 @@ fun PetItemCard(pet: Pet, onClick: () -> Unit, onDelete: () -> Unit) {
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "${pet.type} · ${pet.breed.ifBlank { pet.sex }}",
+                    text = "${pet.type} · DOB: ${pet.birthDate}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = "View care tasks →",
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -412,7 +447,8 @@ fun PetItemCard(pet: Pet, onClick: () -> Unit, onDelete: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete Pet",
-                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                    modifier = Modifier.size(22.dp)
                 )
             }
         }

@@ -43,10 +43,8 @@ fun AddPetScreen(
     var birthDate by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    // Pet Types list for the selection grid (Core 6: Dog, Cat, Bird, Rabbit, Fish, Reptile)
     val petTypes = listOf("Dog", "Cat", "Bird", "Rabbit", "Fish", "Reptile")
 
-    // Breed suggestions based on selected pet type
     val breedSuggestions = remember(type) {
         when (type) {
             "Dog" -> listOf(
@@ -83,7 +81,6 @@ fun AddPetScreen(
     var sexExpanded by remember { mutableStateOf(false) }
     val sexOptions = listOf("Male", "Female")
 
-    // Calendar DatePicker state
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
@@ -100,7 +97,7 @@ fun AddPetScreen(
                         }
                     }
                 ) {
-                    Text("OK", color = MaterialTheme.colorScheme.primary)
+                    Text("OK", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -108,7 +105,7 @@ fun AddPetScreen(
                     Text("Cancel", color = MaterialTheme.colorScheme.secondary)
                 }
             },
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(20.dp)
         ) {
             DatePicker(state = datePickerState)
         }
@@ -119,7 +116,7 @@ fun AddPetScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Add New Pet", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        Text("Add a New Pet", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                         Text("Create a profile for your companion", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
                     }
                 },
@@ -146,7 +143,7 @@ fun AddPetScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Basic Information Section (Pet Name)
+            // Pet Name Field
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -166,10 +163,10 @@ fun AddPetScreen(
                 )
             )
 
-            // Pet Type Selection Grid (Compact 3-column grid)
+            // Pet Type Selection Grid
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = "What type of pet do you have?",
@@ -187,7 +184,7 @@ fun AddPetScreen(
                 petTypes.chunked(3).forEach { rowItems ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         rowItems.forEach { option ->
                             Box(modifier = Modifier.weight(1f)) {
@@ -252,7 +249,7 @@ fun AddPetScreen(
                 }
             }
 
-            // Obligatory Fields: Date of Birth & Gender / Sex
+            // Date of Birth Field
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -282,6 +279,7 @@ fun AddPetScreen(
                 )
             }
 
+            // Gender / Sex Field
             ExposedDropdownMenuBox(
                 expanded = sexExpanded,
                 onExpandedChange = { sexExpanded = it },
@@ -333,7 +331,7 @@ fun AddPetScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Prominent Save Pet Profile Button
+            // Save Pet Button
             Button(
                 onClick = {
                     if (name.isBlank() || type.isBlank() || breed.isBlank() || sex.isBlank() || birthDate.isBlank()) {
@@ -386,14 +384,14 @@ fun PetTypeCard(
     val drawableResId = remember(title) { getPetDrawableId(context, title) }
 
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f) else MaterialTheme.colorScheme.surface
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f) else MaterialTheme.colorScheme.surface
 
     Card(
         modifier = Modifier
             .height(86.dp)
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         border = BorderStroke(if (isSelected) 2.dp else 1.dp, borderColor),
         elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 3.dp else 1.dp)
@@ -424,18 +422,17 @@ fun PetTypeCard(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                     color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                     maxLines = 1
                 )
             }
 
-            // Checkmark badge in top-right if selected
             if (isSelected) {
                 Box(
                     modifier = Modifier
