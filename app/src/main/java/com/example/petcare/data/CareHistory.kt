@@ -10,5 +10,6 @@ data class CareHistory(
     val taskId: Long,
     val petId: Long,
     val taskTitle: String,
-    val completedAt: String // formatted date/time
+    val category: String = "General",
+    val completedAt: String // formatted date/time string e.g., "2026-03-01 08:30"
 )

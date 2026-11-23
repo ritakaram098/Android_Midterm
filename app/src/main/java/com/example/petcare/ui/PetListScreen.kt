@@ -3,6 +3,7 @@ package com.example.petcare.ui
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -344,6 +345,7 @@ fun PetListScreen(
                         items(pets) { pet ->
                             PetItemCard(
                                 pet = pet,
+                                onPetClick = onPetClick,
                                 onDelete = { petToDelete = pet }
                             )
                         }
@@ -355,7 +357,11 @@ fun PetListScreen(
 }
 
 @Composable
-fun PetItemCard(pet: Pet, onDelete: () -> Unit) {
+fun PetItemCard(
+    pet: Pet,
+    onPetClick: (Long) -> Unit,
+    onDelete: () -> Unit
+) {
     val context = LocalContext.current
     val drawableResId = remember(pet.type) { getPetDrawableId(context, pet.type) }
 
@@ -377,7 +383,9 @@ fun PetItemCard(pet: Pet, onDelete: () -> Unit) {
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onPetClick(pet.id) },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

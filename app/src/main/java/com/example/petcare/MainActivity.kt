@@ -78,6 +78,7 @@ fun PetCareApp() {
                 CareTaskScreen(
                     viewModel = careTaskViewModel,
                     onAddTaskClick = { navController.navigate("add_care_task/$petId") },
+                    onEditTaskClick = { taskId -> navController.navigate("edit_care_task/$petId/$taskId") },
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
@@ -93,6 +94,27 @@ fun PetCareApp() {
                 AddCareTaskScreen(
                     viewModel = careTaskViewModel,
                     pet = careTaskViewModel.pet.collectAsState().value,
+                    taskId = 0L,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(
+                route = "edit_care_task/{petId}/{taskId}",
+                arguments = listOf(
+                    navArgument("petId") { type = NavType.LongType },
+                    navArgument("taskId") { type = NavType.LongType }
+                )
+            ) { backStackEntry ->
+                val petId = backStackEntry.arguments?.getLong("petId") ?: 0L
+                val taskId = backStackEntry.arguments?.getLong("taskId") ?: 0L
+                val context = LocalContext.current
+                val careTaskViewModel: CareTaskViewModel = viewModel(
+                    factory = CareTaskViewModelFactory(context.applicationContext as Application, petId)
+                )
+                AddCareTaskScreen(
+                    viewModel = careTaskViewModel,
+                    pet = careTaskViewModel.pet.collectAsState().value,
+                    taskId = taskId,
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
